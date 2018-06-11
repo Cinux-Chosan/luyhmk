@@ -9,6 +9,7 @@ const cors = require('@koa/cors');
 const fs = require('fs');
 const crypto = require('crypto');
 const Buffer = require('buffer');
+const Proxy = require('./proxy');
 
 const dzBaseUrl =
   // 'https://www.okex.com/api/v1/'
@@ -25,6 +26,7 @@ router.get('/okex/:path', async (ctx, next) => {
 
 router.post('/robot', async (ctx, next) => {
   let form = ctx.request.body;
+  let robot = form.robot;
   // 获取手机号
   if (ctx.dzMobile && ctx.dzMobile.length) {
     //
@@ -32,31 +34,39 @@ router.post('/robot', async (ctx, next) => {
     await getMobilenum(ctx);
   }
   let phone = ctx.dzMobile.shift();
-  // 获取验证码
-  let vericode = '';
-  let tmp = '';
-  do {
-    await wait(2000);
-    tmp = await getCode(ctx, phone);
-  } while (tmp && tmp.mobile === 'not_receive');
-  vericode = tmp.code.match(/code is (\d*)/)[1];
+  // 发送验证码
+  let proxyurl = await reqCode(ctx, phone, robot); 
+  if (proxyurl) {
 
-  let data = {
-    vericode,
-    user: phone,
-    pwd: sha512(sha512('qwerty'+"隔壁老王")+"很强壮"),
-    phone,
-    referrer: 17782369765,
-    ...form
+    // 获取验证码
+    let vericode = '';
+    let tmp = '';
+    do {
+      await wait(2000);
+      tmp = await getCode(ctx, phone);
+    } while (tmp && tmp.mobile === 'not_receive');
+    console.log('tmp,  tmp.code: ', tmp, tmp.code)
+    vericode = tmp.code.match(/code is (\d*)/)[1];
+    console.log(`手机号\t${phone}, 验证码：\t${vericode} \n`);
+    let data = {
+      vericode,
+      user: phone,
+      pwd: sha512(sha512('qwerty' + "隔壁老王") + "很强壮"),
+      phone,
+      referrer: '17782369765',
+      ...form
+    }
+    let url = mkUrl('http://47.75.30.77:30309/user/register', data);
+    // let rs = await rp.post(url, {
+    //   form: data
+    // });
+    let rs = await ctx.proxy.execute(url, data, proxyurl);
+    fs.writeFileSync('./ip.txt', proxyurl + '\n', { flag: 'a' })
+    console.log('完成注册！');
+    ctx.body = rs;
+  } else {
+    ctx.body = '发送验证码失败';
   }
-  let url = 'http://47.75.30.77:30309/user/register?';
-  for (let kv of Object.entries(data)) {
-    url += `${kv[0]}=${kv[1]}&`;
-  }
-  let rs = await rp.post(url, {
-    form: data
-  });
-  ctx.body = rs;
 })
 
 router.get('/', async (ctx, next) => {
@@ -75,7 +85,7 @@ router.get('/getMobileNum', async ctx => {
 
 router.get('/getCode', async ctx => {
   let mobile = '';
-  if (ctx.dzMobile && ctx.dzMobile.length) {} else {
+  if (ctx.dzMobile && ctx.dzMobile.length) { } else {
     await getMobilenum(ctx);
   }
   mobile = ctx.dzMobile.shift();
@@ -93,6 +103,7 @@ app
   .use(bodyParser())
   .use(router.routes())
 
+app.context.proxy = new Proxy();
 app.listen(3000);
 
 // 获取 dztoken
@@ -143,6 +154,40 @@ async function getCode(ctx, mobile) {
   }
 }
 
+async function reqCode(ctx, phone, robot) {
+  let data = {
+    vericode: 'sendcode',
+    user: phone,
+    pwd: 'qwerty',
+    phone,
+    robot
+  }
+  let url = mkUrl('http://47.75.30.77:30309/user/register', data);
+  
+  // let rs = await rp.post(url, {
+  //   form: data
+  // });
+
+  let rs = await ctx.proxy.execute(url, data)
+
+  rs = typeof rs === 'string' ? JSON.parse(rs) : rs;
+  if (rs.message === 'success') {
+    return rs.proxyurl;
+  } else if (rs.message === 'phoneExists') {
+    return false;
+  } else {
+    return false;
+  }
+}
+
+function mkUrl(baseUrl, query = {}) {
+  let url = baseUrl.split('?')[0];
+  url += '?';
+  for (let kv of Object.entries(query)) {
+    url += `${kv[0]}=${kv[1]}&`;
+  }
+  return url;
+}
 
 function wait(time) {
   return new Promise((res, rej) => {
@@ -152,7 +197,7 @@ function wait(time) {
 
 function sha512(str) {
   var sha1 = crypto.createHash("sha512");
-    sha1.update(str);
-    var res = sha1.digest("hex");
-    return res;
+  sha1.update(str);
+  var res = sha1.digest("hex");
+  return res;
 }
