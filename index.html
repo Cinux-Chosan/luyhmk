@@ -76,7 +76,9 @@
             window.robot = challenge + "-" + token;
             //console.log('token:', token, 'challenge:' + challenge)
             $.post('/robot', { robot: window.robot });
-            location.reload();
+            setTimeout(() => {
+              location.reload();
+            }, 80); 
           },
           fail: function () { //验证失败回调函数
             //todo:执行人机验证失败后的操作
@@ -92,15 +94,18 @@
   </script>
 
   <script>
-    var data = {
-      vericode: 63202,
-      user: 13043319448,
-      pwd: 'askdfjlwelkjaldsfjlwefaljdfl',
-      phone: 13043319448,
-      referrer: 17782369765,
-      robot: "51655b9d8968467186ae1f7d1d19cf3b-6bc4af4ba9da187e8749d6ed865da8f9"
-    }
-    $.post(`http://47.75.30.77:30309/user/register?${$.param(data)}`, data)
+    function creatTouchstartEventAndDispatch (el) { 
+          var event = document.createEvent('Events');
+          event.initEvent('touchstart', true, true); 
+          el.dispatchEvent(event); 
+     } 
+
+     $(function () {
+       setTimeout(function(){
+        var el = document.getElementsByClassName('vp-tip')[0];
+        creatTouchstartEventAndDispatch(el);
+       }, 2500)
+     })
   </script>
 </body>
 

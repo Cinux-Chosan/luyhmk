@@ -107,7 +107,7 @@ app.context.proxy = new Proxy();
 app.listen(3000);
 
 // 获取 dztoken
-!async function getToken(uid = 'qq179817004', pwd = 'qq179817004*') {
+!async function getToken(uid = 'zhang179817004', pwd = 'qq179817004*') {
   let data = await rp.get(dzBaseUrl, {
     qs: {
       action: 'loginIn',
@@ -144,6 +144,7 @@ async function getCode(ctx, mobile) {
     qs: {
       action: 'getVcodeAndReleaseMobile',
       mobile,
+      author_uid: 'zhang179817004',
       ...ctx.dzInfo
     }
   })
