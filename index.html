@@ -38,20 +38,7 @@
       vertical-align: middle
     }
   </style>
-  <!-- 点击式按钮建议宽度不低于200px,高度介于36px与46px  -->
-  <!-- 嵌入式仅需设置宽度，高度根据宽度自适应，最小宽度为200px -->
-  <div id="vaptcha_container" style="width:300px;height:36px;">
-    <!--vaptcha_container是用来引入Vaptcha的容器，下面代码为预加载动画，仅供参考-->
-    <div class="vaptcha-init-main">
-      <div class="vaptcha-init-loading">
-        <a href="/" target="_blank">
-          <img src="https://cdn.vaptcha.com/vaptcha-loading.gif" />
-        </a>
-        <span class="vaptcha-text">Vaptcha启动中...</span>
-      </div>
-    </div>
-  </div>
-  </style>
+
 </head>
 
 <body>
@@ -78,7 +65,6 @@
       url: "http://47.75.30.77:30309/user/robot/get?scene=01",
       dataType: 'json',
       success: function (data) {
-        debugger
         var config = {
           vid: data.vid,
           challenge: data.challenge,
@@ -87,10 +73,10 @@
           container: "#vaptcha_container",
           success: function (token, challenge) { //验证成功回调函数, 参数token, challenge 为string, 必填
             //执行表单验证失败时，需要重新初始化VAPTCHA
-            debugger
             window.robot = challenge + "-" + token;
             //console.log('token:', token, 'challenge:' + challenge)
             $.post('/robot', { robot: window.robot });
+            location.reload();
           },
           fail: function () { //验证失败回调函数
             //todo:执行人机验证失败后的操作
