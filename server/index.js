@@ -61,7 +61,7 @@ router.post('/robot', async (ctx, next) => {
     //   form: data
     // });
     let rs = await ctx.proxy.execute(url, data, proxyurl);
-    fs.writeFileSync('./ip.txt', proxyurl + '\n', { flag: 'a' })
+    fs.writeFileSync('./ip.txt', phone + '\t' + proxyurl + '\n', { flag: 'a' })
     console.log('完成注册！');
     ctx.body = rs;
   } else {
