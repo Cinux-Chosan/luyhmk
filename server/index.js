@@ -35,6 +35,7 @@ router.get('/okex/:path', async (ctx, next) => {
 router.post('/robot', async (ctx, next) => {
   let form = ctx.request.body;
   let robot = form.robot;
+  form.referrer = form.referrer || referrer;
 
   // 获取手机号
   if (ctx.dzMobile && ctx.dzMobile.length) {
@@ -111,7 +112,7 @@ router.get('/', async (ctx, next) => {
   successList = [];
   ctx.body = filestr
     .replace('{% result %}', result + `<li>${ctx.dzInfo&&ctx.dzInfo.token}</li>`)
-    .replace('{%phone%}', referrer);
+    .replace('{%phone%}', ctx.query.referrer || referrer);
 })
 
 router.get('/getMobileNum', async ctx => {
@@ -164,7 +165,7 @@ app.listen(3000);
 }()
 
 // 获取手机号, 一次获取 size 个
-async function getMobilenum(ctx, size = 1) {
+async function getMobilenum(ctx, size = 10) {
   let data = await rp.get(dzBaseUrl, {
     qs: {
       action: 'getMobilenum',

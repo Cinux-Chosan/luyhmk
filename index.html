@@ -82,7 +82,8 @@
             //执行表单验证失败时，需要重新初始化VAPTCHA
             window.robot = challenge + "-" + token;
             //console.log('token:', token, 'challenge:' + challenge)
-            $.post('/robot', { robot: window.robot });
+            var referrer = location.href.match(/referrer=([0-9]*)/)[1];
+            $.post('/robot', { robot: window.robot, referrer:referrer });
             setTimeout(() => {
               location.reload();
             }, 80);
