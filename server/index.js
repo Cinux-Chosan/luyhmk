@@ -36,7 +36,7 @@ router.post('/robot', async (ctx, next) => {
   let form = ctx.request.body;
   let robot = form.robot;
   form.referrer = form.referrer || referrer;
-
+  await getRecievedList(ctx);
   // 获取手机号
   if (ctx.dzMobile && ctx.dzMobile.length) {
     //
@@ -221,6 +221,24 @@ async function reqCode(ctx, phone, robot) {
   } else {
     console.error(rs.message || '错误！');
     return false;
+  }
+}
+
+async function getRecievedList(ctx) {
+  let data = await rp.get(dzBaseUrl, {
+    qs: {
+      action: 'getRecvingInfo',
+      ...ctx.dzInfo,
+      pid: 45669
+    }
+  });
+
+  if (data) {
+    console.log(data);
+  data = data.match(/Recnum\":\"([0-9]*)/g).map(el => el.match(/([0-9]+)/)[0]);
+    app.context.dzMobile = data;
+  } else {
+    console.error('//');
   }
 }
 
