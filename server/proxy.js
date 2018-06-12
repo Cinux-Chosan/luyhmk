@@ -13,7 +13,7 @@ function Proxy(params = {}) {
 }
 
    // mode 1 为 5u 代理, 2 为大象代理
-Proxy.prototype.getProxyList = function (mode = 2) {
+Proxy.prototype.getProxyList = function (mode = 1) {
     let ctx = this;
     ctx.apiURL = '';
     switch(mode) {
