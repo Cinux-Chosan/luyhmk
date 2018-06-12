@@ -11,10 +11,14 @@ const crypto = require('crypto');
 const Buffer = require('buffer');
 const Proxy = require('./proxy');
 
+
 const dzBaseUrl =
   // 'https://www.okex.com/api/v1/'
   // 'https://chosan.cn:3000/api/'
   'http://api.jmyzm.com/http.do'
+
+let successList = [];
+let failList = [];
 
 router.get('/okex/:path', async (ctx, next) => {
   let qs = ctx.query;
@@ -61,8 +65,14 @@ router.post('/robot', async (ctx, next) => {
     //   form: data
     // });
     let rs = await ctx.proxy.execute(url, data, proxyurl);
-    fs.writeFileSync('./ip.txt', phone + '\t' + proxyurl + '\n', { flag: 'a' })
-    console.log('完成注册！');
+    if (rs.message === 'success') {
+      let output = phone + '\t' + proxyurl + '\n';
+      fs.writeFileSync('./ip.txt', output, { flag: 'a' });
+      successList.push(output);
+      console.log('完成注册！');
+    } else {
+      console.error('错误：\t', rs.message);
+    }
     ctx.body = rs;
   } else {
     ctx.body = '发送验证码失败';
@@ -71,11 +81,18 @@ router.post('/robot', async (ctx, next) => {
 
 router.get('/', async (ctx, next) => {
   ctx.response.type = 'text/html; charset=utf-8';
+  let filestr = '';
   try {
-    ctx.body = fs.readFileSync('../index.html');
+    filestr = fs.readFileSync('../index.html') + '';
   } catch (error) {
-    ctx.body = fs.readFileSync('./index.html');
+    filestr = fs.readFileSync('./index.html') + '';
   }
+  let result = '';
+  successList.forEach(el => {
+    result+=`<li>${el}</li>`
+  });
+  successList = [];
+  ctx.body = filestr.replace('{% result %}', result);
 })
 
 router.get('/getMobileNum', async ctx => {
@@ -175,8 +192,10 @@ async function reqCode(ctx, phone, robot) {
   if (rs.message === 'success') {
     return rs.proxyurl;
   } else if (rs.message === 'phoneExists') {
+    console.error('用户名已存在！');
     return false;
   } else {
+    console.error(rs.message || '错误！');
     return false;
   }
 }

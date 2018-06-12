@@ -17,8 +17,10 @@ function Proxy(params = {}) {
     // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&area=%E4%B8%AD%E5%9B%BD&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A';
     // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&area=%E4%B8%AD%E5%9B%BD&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A'
     // 包含海外， 本地开全局代理使用
-    'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=3&system=1&distinct=0&rettype=1&seprator=%0D%0A'
+    // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=3&system=1&distinct=0&rettype=1&seprator=%0D%0A'
     // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=100&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A'
+    // 包含海外， 非透明， 高匿名
+    'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=1&seprator=%0D%0A'
     this.conf = conf;
     this.apiURL = apiURL;
 }
@@ -52,7 +54,7 @@ Proxy.prototype.getProxyList = function () {
     });
 }
 
-Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'POST', timeout = 1300) {
+Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'POST', timeout = 4000) {
     let proxy = '';
     let ctx = this;
     if (!this.proxyList || !this.proxyList.length) {
@@ -66,7 +68,7 @@ Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'P
         encoding: null,
         form: data,
         headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"
         }
     };
 
@@ -78,7 +80,7 @@ Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'P
     return new Promise((res, rej) => {
         request(targetOptions, function (error, response, body) {
             try {
-                if (error) {
+                if (error && !proxyUrl) {
                     // throw error;
                     return res(ctx.execute(targetURL, data, null,method, timeout));
                 }
