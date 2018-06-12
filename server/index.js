@@ -97,7 +97,9 @@ router.get('/', async (ctx, next) => {
     result+=`<li>${el}</li>`
   });
   successList = [];
-  ctx.body = filestr.replace('{% result %}', result + `<li>${ctx.dzInfo&&ctx.dzInfo.token}</li>`);
+  ctx.body = filestr
+    .replace('{% result %}', result + `<li>${ctx.dzInfo&&ctx.dzInfo.token}</li>`)
+    .replace('{%phone%}', referrer);
 })
 
 router.get('/getMobileNum', async ctx => {
