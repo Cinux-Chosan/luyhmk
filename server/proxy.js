@@ -8,16 +8,24 @@ function Proxy(params = {}) {
         sleepTime: 2000,
         ...params
     }
-    let apiURL =
-    'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A'
 
-    ;
     this.conf = conf;
-    this.apiURL = apiURL;
 }
 
-Proxy.prototype.getProxyList = function () {
+   // mode 1 为 5u 代理, 2 为大象代理
+Proxy.prototype.getProxyList = function (mode = 2) {
     let ctx = this;
+    ctx.apiURL = '';
+    switch(mode) {
+        case 2:
+        ctx.apiURL = 'http://tvp.daxiangdaili.com/ip/?tid=557927171901218&num=1000&sortby=time';
+        break;
+        case 1:
+        ctx.apiURL = 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A';
+        default:
+        break;
+    }
+
     return new Promise((resolve, reject) => {
         let options = {
             method: 'GET',
@@ -78,7 +86,7 @@ Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'P
                     // throw error;
                     return res(ctx.execute(targetURL, data, null,method, timeout));
                 }
-                console.log('targetURL:%s\nproxyurl:%s\ndiliveredUrl%s\n', targetURL, proxyurl, proxyUrl);
+                console.log('targetURL:%s\nproxyurl:%s\ndiliveredUrl:%s\n', targetURL, proxyurl, proxyUrl);
                 console.log('body: ', String(body));
                 if (body) {
                     body = JSON.parse(body.toString());

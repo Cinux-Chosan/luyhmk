@@ -48,10 +48,10 @@ router.post('/robot', async (ctx, next) => {
   if (proxyurl === -1) {
     return console.error(`手机号${phone}已经注册!`);
   } else {
-    while(!proxyurl) {
-      console.error(`返回状态${proxyurl}, 继续使用手机号 ${phone} 进行注册!`);
-      proxyurl = await reqCode(ctx, phone, robot);
-    }
+    // while(!proxyurl) {
+      // console.error(`返回状态${proxyurl}, 继续使用手机号 ${phone} 进行注册!`);
+      // proxyurl = await reqCode(ctx, phone, robot);
+    // }
   }
   if (proxyurl) {
 
