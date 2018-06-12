@@ -79,10 +79,11 @@ Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'P
                     return res(ctx.execute(targetURL, data, null,method, timeout));
                 }
                 console.log('targetURL:%s\nproxyurl:%s\ndiliveredUrl%s\n', targetURL, proxyurl, proxyUrl);
-                console.log('body: ', body + '');
-
-                body = JSON.parse(body.toString());
-                body.proxyurl = proxyurl;
+                console.log('body: ', String(body));
+                if (body) {
+                    body = JSON.parse(body.toString());
+                    body.proxyurl = proxyurl;
+                }
                 var endTimestamp = (new Date()).valueOf();
                 console.log('  > time ' + (endTimestamp - startTimestamp) + 'ms ' + body);
                 res(body);

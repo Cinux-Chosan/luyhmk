@@ -61,7 +61,11 @@ router.post('/robot', async (ctx, next) => {
     do {
       await wait(2000);
       tmp = await getCode(ctx, phone);
-    } while (tmp && tmp.mobile === 'not_receive');
+      if (tmp.mobile !== 'not_receive' && !tmp.code){
+        return console.error('账户状态异常!异常信息: \t' + tmp.mobile);
+      }
+    } while (tmp && (tmp.mobile === 'not_receive') || tmp.code === 'to_fast_try_again');
+
     console.log('tmp,  tmp.code: ', tmp, tmp.code)
     vericode = tmp.code.match(/code is (\d*)/)[1];
     console.log(`手机号\t${phone}, 验证码：\t${vericode} \n`);
@@ -82,7 +86,7 @@ router.post('/robot', async (ctx, next) => {
       let output = phone + '\t' + proxyurl + '\n';
       fs.writeFileSync('./ip.txt', output, { flag: 'a' });
       successList.push(output);
-      console.log('完成注册！');
+      console.log(`\n\n-----------------\n完成注册！\n, 手机号 \t ${phone}, 代理地址: ${proxyurl}\n\n-----------------`);
     } else {
       console.error('错误：\t', rs.message);
     }
