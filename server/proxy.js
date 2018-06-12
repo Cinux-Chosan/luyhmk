@@ -93,6 +93,7 @@ Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'P
                 res(body);
             } catch (e) {
                 fs.writeFileSync('log.html', body);
+                console.error(targetURL, proxyUrl);
                 console.error(e);
                 rej(e);
             }
