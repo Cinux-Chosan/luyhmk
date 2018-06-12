@@ -12,11 +12,14 @@ function Proxy(params = {}) {
     this.conf = conf;
 }
 
-   // mode 1 为 5u 代理, 2 为大象代理
-Proxy.prototype.getProxyList = function (mode = 2) {
+   // mode 1 为 5u 代理, 2 为大象代理, 3 为代理云
+Proxy.prototype.getProxyList = function (mode = 3) {
     let ctx = this;
     ctx.apiURL = '';
     switch(mode) {
+        case 3:
+        ctx.apiURL = 'http://dly.134t.com/query.txt?key=NP9229AF47&word=&count=1000';
+        break;
         case 2:
         ctx.apiURL = 'http://tvp.daxiangdaili.com/ip/?tid=557927171901218&num=1000&sortby=time';
         break;
