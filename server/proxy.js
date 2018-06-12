@@ -8,21 +8,10 @@ function Proxy(params = {}) {
         sleepTime: 2000,
         ...params
     }
-    let apiURL = 
-    // let apiURL = 'http://api.ip.data5u.com/dynamic/get.html?order=' + conf.order + '&sep=3';
-    // let apiURL = 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=100&area=%E4%B8%AD%E5%9B%BD&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=0&seprator=%0D%0A'
-    // let apiURL = 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=100&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=0&seprator=%0D%0A';
-    // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=100&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=3&system=1&distinct=0&rettype=1&seprator=%0D%0A'
-    // 仅含国内
-    // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&area=%E4%B8%AD%E5%9B%BD&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A';
-    // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&area=%E4%B8%AD%E5%9B%BD&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A'
-    // 包含海外， 本地开全局代理使用
-    // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=3&system=1&distinct=0&rettype=1&seprator=%0D%0A'
-    // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=100&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A'
-    // 包含海外， 非透明， 高匿名
-    // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=1&seprator=%0D%0A'
-    // 包含海外， 透明， 高匿名
-    'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=3&system=1&distinct=0&rettype=1&seprator=%0D%0A'
+    let apiURL =
+    'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A'
+
+    ;
     this.conf = conf;
     this.apiURL = apiURL;
 }
@@ -76,7 +65,7 @@ Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'P
 
     let proxyurl = proxyUrl || proxyList.shift();
 
-    console.log(`* testing ${proxyurl}`);
+    console.log(`* testing \t ${targetURL} ${proxyurl}`);
     var startTimestamp = (new Date()).valueOf();
     targetOptions.proxy = 'http://' + proxyurl;
     return new Promise((res, rej) => {
