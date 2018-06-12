@@ -45,6 +45,14 @@ router.post('/robot', async (ctx, next) => {
   let phone = ctx.dzMobile.shift();
   // 发送验证码
   let proxyurl = await reqCode(ctx, phone, robot);
+  if (proxyurl === -1) {
+    return console.error(`手机号${phone}已经注册!`);
+  } else {
+    while(!proxyurl) {
+      console.error(`返回状态${proxyurl}, 继续使用手机号 ${phone} 进行注册!`);
+      proxyurl = await reqCode(ctx, phone, robot);
+    }
+  }
   if (proxyurl) {
 
     // 获取验证码
@@ -204,7 +212,7 @@ async function reqCode(ctx, phone, robot) {
     return rs.proxyurl;
   } else if (rs.message === 'phoneExists') {
     console.error('用户名已存在！');
-    return false;
+    return -1;
   } else {
     console.error(rs.message || '错误！');
     return false;

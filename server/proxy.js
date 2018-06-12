@@ -59,7 +59,10 @@ Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'P
         encoding: null,
         form: data,
         headers: {
-            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1",
+            "Accept": "*/*",
+            "Origin": "http://www.bocfun.io",
+            "Referer": "http://www.bocfun.io/register.html?refereePhone=17782369765"
         }
     };
 
@@ -75,16 +78,17 @@ Proxy.prototype.execute = async function (targetURL, data, proxyUrl, method = 'P
                     // throw error;
                     return res(ctx.execute(targetURL, data, null,method, timeout));
                 }
+                console.log('targetURL:%s\nproxyurl:%s\ndiliveredUrl%s\n', targetURL, proxyurl, proxyUrl);
                 console.log('body: ', body + '');
+
                 body = JSON.parse(body.toString());
                 body.proxyurl = proxyurl;
-                console.log('proxyurl:\n', proxyurl);
                 var endTimestamp = (new Date()).valueOf();
                 console.log('  > time ' + (endTimestamp - startTimestamp) + 'ms ' + body);
                 res(body);
             } catch (e) {
                 fs.writeFileSync('log.html', body);
-                console.error(targetURL, proxyUrl);
+                console.error(targetURL, proxyurl, proxyUrl);
                 console.error(e);
                 rej(e);
             }
