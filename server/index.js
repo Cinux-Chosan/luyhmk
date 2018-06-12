@@ -17,7 +17,7 @@ const dzBaseUrl =
   // 'https://www.okex.com/api/v1/'
   // 'https://chosan.cn:3000/api/'
   'http://api.jmyzm.com/http.do'
-let referrer = '17782369765',
+let referrer = '15683351915',
   uid = 'zhang179817004',
   pwd = 'qq179817004*';
 
