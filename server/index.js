@@ -92,7 +92,7 @@ router.get('/', async (ctx, next) => {
     result+=`<li>${el}</li>`
   });
   successList = [];
-  ctx.body = filestr.replace('{% result %}', result);
+  ctx.body = filestr.replace('{% result %}', result + `<li>${ctx.dzInfo&&ctx.dzInfo.token}</li>`);
 })
 
 router.get('/getMobileNum', async ctx => {
