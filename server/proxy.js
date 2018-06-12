@@ -20,7 +20,9 @@ function Proxy(params = {}) {
     // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=3&system=1&distinct=0&rettype=1&seprator=%0D%0A'
     // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=100&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=2&system=1&distinct=0&rettype=1&seprator=%0D%0A'
     // 包含海外， 非透明， 高匿名
-    'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=1&seprator=%0D%0A'
+    // 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=1&seprator=%0D%0A'
+    // 包含海外， 透明， 高匿名
+    'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=1&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=3&system=1&distinct=0&rettype=1&seprator=%0D%0A'
     this.conf = conf;
     this.apiURL = apiURL;
 }
