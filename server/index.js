@@ -10,12 +10,16 @@ const fs = require('fs');
 const crypto = require('crypto');
 const Buffer = require('buffer');
 const Proxy = require('./proxy');
+const util = require('util');
 
 
 const dzBaseUrl =
   // 'https://www.okex.com/api/v1/'
   // 'https://chosan.cn:3000/api/'
   'http://api.jmyzm.com/http.do'
+let referrer = '17782369765',
+  uid = 'zhang179817004',
+  pwd = 'qq179817004*';
 
 let successList = [];
 let failList = [];
@@ -31,6 +35,7 @@ router.get('/okex/:path', async (ctx, next) => {
 router.post('/robot', async (ctx, next) => {
   let form = ctx.request.body;
   let robot = form.robot;
+
   // 获取手机号
   if (ctx.dzMobile && ctx.dzMobile.length) {
     //
@@ -39,7 +44,7 @@ router.post('/robot', async (ctx, next) => {
   }
   let phone = ctx.dzMobile.shift();
   // 发送验证码
-  let proxyurl = await reqCode(ctx, phone, robot); 
+  let proxyurl = await reqCode(ctx, phone, robot);
   if (proxyurl) {
 
     // 获取验证码
@@ -57,7 +62,7 @@ router.post('/robot', async (ctx, next) => {
       user: phone,
       pwd: sha512(sha512('qwerty' + "隔壁老王") + "很强壮"),
       phone,
-      referrer: '17782369765',
+      referrer,  // 全局 referrer
       ...form
     }
     let url = mkUrl('http://47.75.30.77:30309/user/register', data);
@@ -115,6 +120,10 @@ router.get('/getCode', async ctx => {
   ctx.body = data.code;
 })
 
+router.get('/test', async ctx => {
+  ctx.body = util.inspect(process.argv);
+})
+
 app
   .use(cors())
   .use(bodyParser())
@@ -124,7 +133,7 @@ app.context.proxy = new Proxy();
 app.listen(3000);
 
 // 获取 dztoken
-!async function getToken(uid = 'zhang179817004', pwd = 'qq179817004*') {
+!async function getToken() {
   let data = await rp.get(dzBaseUrl, {
     qs: {
       action: 'loginIn',
@@ -181,7 +190,7 @@ async function reqCode(ctx, phone, robot) {
     robot
   }
   let url = mkUrl('http://47.75.30.77:30309/user/register', data);
-  
+
   // let rs = await rp.post(url, {
   //   form: data
   // });

@@ -7,6 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
+    #vaptcha_container{
+      margin-top: 150px;
+    }
     .vaptcha-init-main {
       display: table;
       width: 100%;
@@ -82,7 +85,7 @@
             $.post('/robot', { robot: window.robot });
             setTimeout(() => {
               location.reload();
-            }, 80); 
+            }, 80);
           },
           fail: function () { //验证失败回调函数
             //todo:执行人机验证失败后的操作
@@ -98,11 +101,11 @@
   </script>
 
   <script>
-    function creatTouchstartEventAndDispatch (el) { 
+    function creatTouchstartEventAndDispatch (el) {
           var event = document.createEvent('Events');
-          event.initEvent('touchstart', true, true); 
-          el.dispatchEvent(event); 
-     } 
+          event.initEvent('touchstart', true, true);
+          el.dispatchEvent(event);
+     }
 
      $(function () {
        setTimeout(function(){
