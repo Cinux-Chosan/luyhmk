@@ -74,7 +74,7 @@ async function req() {
       if (e.statusCode == 302) {
         success++;
         console.log('当前成功\t' + success + ' 条');
-        fs.writeFileSync('./postform.txt', `发送数据: \t 号码: ${phone}\t 币: ${coin}, 代理: ${proxy}`, { flag: 'a' });
+        fs.writeFileSync('./postform.txt', `发送数据: \t 号码: ${phone}\t 币: ${coin}, 代理: ${proxy}\n`, { flag: 'a' });
         rp.get(e.error.match('<a href="(.*)">redirected</a>')[1], {
           jar,
           proxy,
