@@ -80,7 +80,7 @@ function req() {
 }
 
 let count = 0;
-while(count++ < 100000) {
+while(count++ < 10) {
   setTimeout(() => {
     req()
   }, 0);
