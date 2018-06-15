@@ -40,7 +40,7 @@ async function req() {
     field_2: coin
   }
   rp.get(url, { jar, proxy, timeout }, (a, b, c, d) => {
-    if (a) return console.log(a.message);
+    if (a) return console.error('发生错误::::::::::::::::::\n', a.message);
     console.log('发送数据', entry);
     rp.post(url, {
       proxy,
@@ -83,14 +83,13 @@ async function req() {
         fail++;
         console.log('当前失败\t' + fail + ' 条');
       }
-      console.log(e)
     })
   })
 }
 
 async function go() {
   let count = 0;
-  while (count++ < 1000) {
+  while (count++ < 10000) {
     setTimeout(() => {
       req()
     }, 0);
@@ -100,7 +99,6 @@ async function go() {
 go();
 
 function getAuthenticityToken(c) {
-  console.log('\n\n 页面内容\n\t' + c);
   return c.match(/name="authenticity_token" value="(.*)"/)[1];
 }
 
