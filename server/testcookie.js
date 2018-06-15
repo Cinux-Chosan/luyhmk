@@ -133,6 +133,7 @@ async function getProxyList() {
   }
   ret = (r + '').match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}/g);
   // ret = JSON.parse(r + '').data.map(el => el.ip+':'+el.port)
+  console.log(ret)
   return ret;
 }
 
