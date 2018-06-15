@@ -16,10 +16,13 @@ let proxyList = ['167.114.250.199:80',
   '119.57.112.181:8080',
   '103.248.248.235:53281'
 ]
+let fail = 0;
+let success = 0;
 function req() {
   let jar = rp.jar();
   let url = 'https://jinshuju.net/f/8Oui0T';
   let proxy = 'http://' + proxyList[Math.floor(Math.random() * proxyList.length)];
+  let timeout = 6000;
   console.log(proxy);
   let phone = gPhone();
   let coin = gCoin();
@@ -27,10 +30,12 @@ function req() {
     field_1: phone,
     field_2: coin
   }
-  rp.get(url, { jar, proxy }, (a, b, c, d) => {
+  rp.get(url, { jar, proxy, timeout }, (a, b, c, d) => {
+    if (a) throw(a);
     console.log('发送数据', entry);
     rp.post(url, {
       proxy,
+      timeout,
       jar, form: {
         authenticity_token: getAuthenticityToken(c),
         utf8: '✓',
@@ -51,6 +56,8 @@ function req() {
       console.log(data);
     }).catch(e => {
       if (e.statusCode == 302) {
+        success ++;
+        console.log('当前成功\t'+success+ ' 条');
         fs.writeFileSync('./postform.txt', `发送数据: \t 号码: ${phone}\t 币: ${coin}, 代理: ${proxy}`);
         rp.get(e.error.match('<a href="(.*)">redirected</a>')[1], {
           jar,
@@ -62,6 +69,10 @@ function req() {
             "Referer": "https://jinshuju.net/f/8Oui0T"
           }
         })
+      } else {
+        console.log('错误消息:' + e.code);
+        fail ++;
+        console.log('当前失败\t' +fail+ ' 条');
       }
       console.log(e)
     })
