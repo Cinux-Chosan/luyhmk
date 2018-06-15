@@ -31,7 +31,7 @@ function req() {
     field_2: coin
   }
   rp.get(url, { jar, proxy, timeout }, (a, b, c, d) => {
-    if (a) throw(a);
+    if (a) return console.log(a.message);
     console.log('发送数据', entry);
     rp.post(url, {
       proxy,
