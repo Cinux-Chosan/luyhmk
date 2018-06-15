@@ -19,7 +19,7 @@ const dzBaseUrl =
   'http://api.jmyzm.com/http.do'
 let referrer = '15683351915',
   uid = 'zhang179817004',
-  pwd = 'qq179817004*';
+  pwd = '查看 qq 空间';
 
 let successList = [];
 let failList = [];
@@ -73,7 +73,7 @@ router.post('/robot', async (ctx, next) => {
     let data = {
       vericode,
       user: phone,
-      pwd: sha512(sha512('qwerty' + "隔壁老王") + "很强壮"),
+      pwd: sha512(sha512('qwerty' + "隔壁老王") + "很强壮"),  // boc 的密码加密就是加的"隔壁老王很强壮""
       phone,
       referrer,  // 全局 referrer
       ...form
