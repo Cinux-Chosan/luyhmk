@@ -1,27 +1,32 @@
 const fs = require('fs');
 const rp = require('request-promise-native');
-let proxyList = ['167.114.250.199:80',
-  '220.73.175.122:808',
-  '89.218.22.178:8080',
-  '81.30.18.121:8080',
-  '212.178.1.131:53281',
-  '117.90.137.194:9000',
-  '107.174.26.51:1080',
-  '112.250.65.222:53281',
-  '213.136.69.28:3128',
-  '45.55.27.88:3128',
-  '67.205.154.3:80',
-  '200.122.211.14:8080',
-  '115.229.119.109:9000',
-  '119.57.112.181:8080',
-  '103.248.248.235:53281'
+let proxyList = [
+  // '167.114.250.199:80',
+  // '220.73.175.122:808',
+  // '89.218.22.178:8080',
+  // '81.30.18.121:8080',
+  // '212.178.1.131:53281',
+  // '117.90.137.194:9000',
+  // '107.174.26.51:1080',
+  // '112.250.65.222:53281',
+  // '213.136.69.28:3128',
+  // '45.55.27.88:3128',
+  // '67.205.154.3:80',
+  // '200.122.211.14:8080',
+  // '115.229.119.109:9000',
+  // '119.57.112.181:8080',
+  // '103.248.248.235:53281'
 ]
 let fail = 0;
 let success = 0;
-function req() {
+async function req() {
   let jar = rp.jar();
+  if (!proxyList.length) {
+    proxyList = await getProxyList();
+  }
   let url = 'https://jinshuju.net/f/8Oui0T';
-  let proxy = 'http://' + proxyList[Math.floor(Math.random() * proxyList.length)];
+  // let proxy = 'http://' + proxyList[Math.floor(Math.random() * proxyList.length)];
+  let proxy = 'http://' + proxyList.pop();
   let timeout = 6000;
   console.log(proxy);
   let phone = gPhone();
@@ -80,7 +85,7 @@ function req() {
 }
 
 let count = 0;
-while(count++ < 10) {
+while(count++ < 1) {
   setTimeout(() => {
     req()
   }, 0);
@@ -101,4 +106,25 @@ function gPhone() {
 
 function gCoin() {
   return parseInt(Math.random() * 400) * 5 + Math.round(Math.random());
+}
+
+
+async function getProxyList() {
+  let options = {
+    url: 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=1&seprator=%0D%0A',
+    gzip: true,
+    encoding: null,
+    headers: {},
+    order: '8d4552df4d73e81f6474d1cab0d9570c',
+  }
+  let r = '';
+  try {
+  r = await rp.get(options);
+
+  } catch (error) {
+    console.log(error)
+  }
+  ret = (r + '').match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}/g);
+  // ret = JSON.parse(r + '').data.map(el => el.ip+':'+el.port)
+  return ret;
 }
