@@ -27,7 +27,6 @@ async function req() {
     proxyList = await getProxyList();
     flag = false;
   }
-  await check(() => proxyList.length);
   let url = 'https://jinshuju.net/f/8Oui0T';
   // let proxy = 'http://' + proxyList[Math.floor(Math.random() * proxyList.length)];
   let proxy = '';
