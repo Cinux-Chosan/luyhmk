@@ -81,7 +81,7 @@ function req() {
 
 let count = 0;
 while(count++ < 10000000 ) {
-  req();
+  setTimeout(req, 0);
 }
 
 function getAuthenticityToken(c) {
