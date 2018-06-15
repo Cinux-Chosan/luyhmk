@@ -1,3 +1,4 @@
+const fs = require('fs');
 const rp = require('request-promise-native');
 let proxyList = ['167.114.250.199:80',
   '220.73.175.122:808',
@@ -20,13 +21,14 @@ function req() {
   let url = 'https://jinshuju.net/f/8Oui0T';
   let proxy = 'http://' + proxyList[Math.floor(Math.random() * proxyList.length)];
   console.log(proxy);
+  let phone = gPhone();
+  let coin = gCoin();
+  let entry = {
+    field_1: phone,
+    field_2: coin
+  }
   rp.get(url, { jar, proxy }, (a, b, c, d) => {
-    let phone = gPhone();
-    let coin = gCoin();
-    let entry = {
-      field_1: phone,
-      field_2: coin
-    }
+    console.log('发送数据', entry);
     rp.post(url, {
       proxy,
       jar, form: {
@@ -49,6 +51,7 @@ function req() {
       console.log(data);
     }).catch(e => {
       if (e.statusCode == 302) {
+        fs.writeFileSync('./postform.txt', `发送数据: \t 号码: ${phone}\t 币: ${coin}, 代理: ${proxy}`);
         rp.get(e.error.match('<a href="(.*)">redirected</a>')[1], {
           jar,
           proxy,
@@ -65,7 +68,10 @@ function req() {
   })
 }
 
-req();
+let count = 0;
+while(count++ < 1 ) {
+  req();
+}
 
 function getAuthenticityToken(c) {
   console.log('\n\n 页面内容\n\t' + c);
