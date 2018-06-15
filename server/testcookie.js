@@ -80,8 +80,10 @@ function req() {
 }
 
 let count = 0;
-while(count++ < 10000000 ) {
-  setTimeout(req, 0);
+while(count++ < 100000) {
+  setTimeout(() => {
+    req()
+  }, 0);
 }
 
 function getAuthenticityToken(c) {
