@@ -30,7 +30,14 @@ async function req() {
   await check(() => proxyList.length);
   let url = 'https://jinshuju.net/f/8Oui0T';
   // let proxy = 'http://' + proxyList[Math.floor(Math.random() * proxyList.length)];
-  let proxy = 'http://' + proxyList.pop();
+  let proxy = '';
+  do {
+    await check(() => proxyList.length);
+    proxy = proxyList.pop();
+  }
+  while(!proxy);
+
+  proxy = 'http://' + proxy;
   let timeout = 6000;
   console.log(proxy);
   let phone = gPhone();
