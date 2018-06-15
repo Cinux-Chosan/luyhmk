@@ -17,13 +17,17 @@ let proxyList = [
   // '119.57.112.181:8080',
   // '103.248.248.235:53281'
 ]
+let flag = false;
 let fail = 0;
 let success = 0;
 async function req() {
   let jar = rp.jar();
-  if (!proxyList.length) {
+  if (!proxyList.length && !flag) {
+    flag = true;
     proxyList = await getProxyList();
+    flag = false;
   }
+  await check(() => proxyList.length);
   let url = 'https://jinshuju.net/f/8Oui0T';
   // let proxy = 'http://' + proxyList[Math.floor(Math.random() * proxyList.length)];
   let proxy = 'http://' + proxyList.pop();
@@ -61,8 +65,8 @@ async function req() {
       console.log(data);
     }).catch(e => {
       if (e.statusCode == 302) {
-        success ++;
-        console.log('当前成功\t'+success+ ' 条');
+        success++;
+        console.log('当前成功\t' + success + ' 条');
         fs.writeFileSync('./postform.txt', `发送数据: \t 号码: ${phone}\t 币: ${coin}, 代理: ${proxy}`, { flag: 'a' });
         rp.get(e.error.match('<a href="(.*)">redirected</a>')[1], {
           jar,
@@ -76,20 +80,24 @@ async function req() {
         })
       } else {
         console.log('错误消息:' + e.code);
-        fail ++;
-        console.log('当前失败\t' +fail+ ' 条');
+        fail++;
+        console.log('当前失败\t' + fail + ' 条');
       }
       console.log(e)
     })
   })
 }
 
-let count = 0;
-while(count++ < 1) {
-  setTimeout(() => {
-    req()
-  }, 0);
+async function go() {
+  let count = 0;
+  while (count++ < 1000000) {
+    setTimeout(() => {
+      req()
+    }, 0);
+  }
 }
+
+go();
 
 function getAuthenticityToken(c) {
   console.log('\n\n 页面内容\n\t' + c);
@@ -119,12 +127,30 @@ async function getProxyList() {
   }
   let r = '';
   try {
-  r = await rp.get(options);
-
+    r = await rp.get(options);
   } catch (error) {
     console.log(error)
   }
   ret = (r + '').match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}/g);
   // ret = JSON.parse(r + '').data.map(el => el.ip+':'+el.port)
   return ret;
+}
+
+
+
+function check(fn) {
+  return new Promise((res, rej) => {
+    let time = 0;
+    let id = setInterval(() => {
+      if (fn()) {
+        res();
+        clearInterval(id);
+      }
+      else if (time >= 30000) {
+        rej('超时');
+        clearInterval(id);
+      }
+      time += 300;
+    }, 300)
+  })
 }
