@@ -80,7 +80,7 @@ function req() {
 }
 
 let count = 0;
-while(count++ < 1 ) {
+while(count++ < 10000000 ) {
   req();
 }
 
