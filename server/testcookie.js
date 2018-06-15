@@ -90,7 +90,7 @@ async function req() {
 
 async function go() {
   let count = 0;
-  while (count++ < 1000000) {
+  while (count++ < 1000) {
     setTimeout(() => {
       req()
     }, 0);
@@ -118,8 +118,9 @@ function gCoin() {
 
 
 async function getProxyList() {
+  let url = 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=1&seprator=%0D%0A';
   let options = {
-    url: 'http://api.ip.data5u.com/api/get.shtml?order=8d4552df4d73e81f6474d1cab0d9570c&num=10000&carrier=0&protocol=0&an1=1&an2=2&an3=3&sp1=1&sp2=2&sp3=3&sort=1&system=1&distinct=0&rettype=1&seprator=%0D%0A',
+    url,
     gzip: true,
     encoding: null,
     headers: {},
@@ -127,10 +128,11 @@ async function getProxyList() {
   }
   let r = '';
   try {
-    r = await rp.get(options);
+    r = await rp.get(url, options);
   } catch (error) {
     console.log(error)
   }
+  console.log('getting proxylist');
   ret = (r + '').match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}/g);
   // ret = JSON.parse(r + '').data.map(el => el.ip+':'+el.port)
   console.log(ret)
